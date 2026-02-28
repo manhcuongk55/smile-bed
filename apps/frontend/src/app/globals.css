@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: 262 83% 58%;
+  --primary-foreground: 210 20% 98%;
+  --secondary: 199 89% 48%;
+  --secondary-foreground: 210 20% 98%;
+  --accent: 339 90% 66%;
+  --background: 210 40% 98%;
+  --foreground: 222 47% 11%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+  --border: 214 32% 91%;
+}
+
+@layer base {
+  body {
+    @apply bg-[var(--background)] text-[var(--foreground)] antialiased;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-lg;
+  }
+  
+  .btn-primary {
+    @apply bg-indigo-600 text-white px-6 py-3 rounded-2xl font-semibold 
+           hover:bg-indigo-700 transition-all active:scale-95 shadow-lg shadow-indigo-200;
+  }
+
+  .btn-secondary {
+    @apply bg-sky-500 text-white px-6 py-3 rounded-2xl font-semibold 
+           hover:bg-sky-600 transition-all active:scale-95 shadow-lg shadow-sky-200;
+  }
+}
+
+.gradient-text {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500;
+}

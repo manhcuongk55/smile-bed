@@ -1,0 +1,15 @@
+node_modules/
+.next/
+dist/
+build/
+.env
+.env.local
+.DS_Store
+# NestJS
+/dist
+/node_modules
+# IDEs
+.vscode/
+.idea/
+# Monorepo
+.turbo

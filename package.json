@@ -1,0 +1,21 @@
+{
+  "name": "smile-bed",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint"
+  },
+  "devDependencies": {
+    "prisma": "^7.4.2",
+    "turbo": "^2.0.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^7.4.2"
+  }
+}
