@@ -5,16 +5,16 @@ import { Search, MapPin, Calculator } from 'lucide-react';
 
 export default function Hero() {
     return (
-        <section className="relative pt-32 pb-20 px-6 overflow-hidden">
+        <section className="relative pt-24 sm:pt-32 pb-12 sm:pb-20 px-4 sm:px-6 overflow-hidden">
             {/* Background Blobs */}
-            <div className="absolute top-0 right-0 -z-10 w-96 h-96 bg-indigo-200/50 rounded-full blur-3xl animate-pulse-slow" />
-            <div className="absolute bottom-0 left-0 -z-10 w-96 h-96 bg-sky-200/50 rounded-full blur-3xl animate-float" />
+            <div className="absolute top-0 right-0 -z-10 w-48 sm:w-96 h-48 sm:h-96 bg-indigo-200/50 rounded-full blur-3xl animate-pulse-slow" />
+            <div className="absolute bottom-0 left-0 -z-10 w-48 sm:w-96 h-48 sm:h-96 bg-sky-200/50 rounded-full blur-3xl animate-float" />
 
             <div className="max-w-7xl mx-auto text-center">
                 <motion.h1
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6"
+                    className="text-3xl sm:text-5xl md:text-7xl font-extrabold tracking-tight mb-4 sm:mb-6"
                 >
                     Tìm nơi ở <span className="gradient-text">Hoàn Hảo</span> <br />
                     phù hợp với phong cách sống của bạn
@@ -24,7 +24,7 @@ export default function Hero() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1 }}
-                    className="text-lg text-slate-600 mb-10 max-w-2xl mx-auto"
+                    className="text-base sm:text-lg text-slate-600 mb-6 sm:mb-10 max-w-2xl mx-auto"
                 >
                     Nền tảng quản lý thuê phòng hiện đại, minh bạch và tối ưu di chuyển cho người trẻ năng động.
                 </motion.p>

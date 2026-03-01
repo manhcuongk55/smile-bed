@@ -1,6 +1,9 @@
 import Hero from '@/components/discovery/Hero';
 import RoomCard from '@/components/discovery/RoomCard';
 import { ShieldCheck, Info } from 'lucide-react';
+import Link from 'next/link';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 const MOCK_ROOMS = [
     {
@@ -35,24 +38,46 @@ const MOCK_ROOMS = [
     },
 ];
 
-export default function Home() {
+export default async function Home() {
+    let displayRooms = MOCK_ROOMS;
+    try {
+        const res = await fetch(`${API_URL}/discovery/rooms`, { cache: 'no-store' });
+        if (res.ok) {
+            const data = await res.json();
+            if (data && data.length > 0) {
+                displayRooms = data.map((r: any) => ({
+                    id: r.id,
+                    title: `${r.property?.name || 'Phòng'} - ${r.roomNumber}`,
+                    price: r.price,
+                    estimatedUtilities: 500000, // Placeholder
+                    location: r.property?.address || 'TP.HCM',
+                    image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                    verified: true,
+                    fireSafetyScore: 9.5,
+                }));
+            }
+        }
+    } catch (e) {
+        console.error('Fetch failed, falling back to mock:', e);
+    }
+
     return (
         <div className="bg-slate-50 min-h-screen">
             <Hero />
 
-            <section className="max-w-7xl mx-auto px-6 py-20">
-                <div className="flex justify-between items-end mb-12">
+            <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-8 sm:mb-12">
                     <div>
-                        <h2 className="text-3xl font-black text-slate-900 mb-2">Phòng đã xác thực (Verified)</h2>
-                        <p className="text-slate-500 font-medium italic">Minh bạch thông tin, an tâm lựa chọn.</p>
+                        <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mb-2">Phòng đã xác thực (Verified)</h2>
+                        <p className="text-slate-500 font-medium italic text-sm sm:text-base">Minh bạch thông tin, an tâm lựa chọn.</p>
                     </div>
-                    <div className="flex items-center gap-2 text-indigo-600 font-bold px-4 py-2 bg-indigo-50 rounded-xl">
+                    <div className="flex items-center gap-2 text-indigo-600 font-bold px-4 py-2 bg-indigo-50 rounded-xl text-sm shrink-0 self-start sm:self-auto">
                         <ShieldCheck className="w-5 h-5" /> Hệ thống Smile Verified
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {MOCK_ROOMS.map((room) => (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                    {displayRooms.map((room) => (
                         <div key={room.id} className="group bg-white rounded-[2.5rem] overflow-hidden border border-slate-100 hover:shadow-2xl transition-all duration-300 relative">
                             <div className="relative h-64 overflow-hidden">
                                 {room.verified && (
@@ -70,7 +95,7 @@ export default function Home() {
                                 />
                             </div>
 
-                            <div className="p-8">
+                            <div className="p-5 sm:p-8">
                                 <h3 className="text-xl font-bold text-slate-900 mb-2">{room.title}</h3>
                                 <div className="flex items-center gap-2 text-slate-400 text-sm mb-6">
                                     <MapPin className="w-4 h-4" /> {room.location}
@@ -88,9 +113,11 @@ export default function Home() {
                                     <p className="text-[10px] text-slate-400 mt-1">Gồm {room.price.toLocaleString()}đ thuê + {room.estimatedUtilities.toLocaleString()}đ (Điện/Nước/Wifi)</p>
                                 </div>
 
-                                <button className="w-full py-4 rounded-2xl font-black bg-indigo-600 text-white hover:bg-indigo-700 hover:shadow-xl transition-all active:scale-95 shadow-lg shadow-indigo-100">
-                                    Xem chi tiết
-                                </button>
+                                <Link href={`/rooms/${room.id}`} className="block">
+                                    <button className="w-full py-4 rounded-2xl font-black bg-indigo-600 text-white hover:bg-indigo-700 hover:shadow-xl transition-all active:scale-95 shadow-lg shadow-indigo-100">
+                                        Xem chi tiết
+                                    </button>
+                                </Link>
                             </div>
                         </div>
                     ))}

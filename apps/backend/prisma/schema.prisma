@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -77,11 +77,12 @@ model Room {
   roomNumber  String
   price       Float
   status      RoomStatus @default(AVAILABLE)
-  features    String[]   // e.g., ["wifi", "ac"]
+  features    String
   
   contracts   Contract[]
   readings    Reading[]
   maintenance MaintenanceRequest[]
+  viewings    RoomViewing[]
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 }
@@ -164,3 +165,52 @@ model NearbyPOI {
   type        String   // e.g., "supermarket", "station"
   distance    Float    // in meters or km
 }
+
+model Asset {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  type        String   // "RENTED", "PURCHASED"
+  price       Float
+  propertyId  String?
+  roomId      String?  // If assigned
+  status      String   @default("AVAILABLE")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Service {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  price       Float
+  frequency   String   // "MONTHLY", "ONE_TIME"
+  propertyId  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum ViewingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+model RoomViewing {
+  id              String        @id @default(uuid())
+  roomId          String
+  room            Room          @relation(fields: [roomId], references: [id])
+  guestName       String
+  guestPhone      String
+  guestEmail      String?
+  preferredDate   DateTime
+  preferredTime   String        // e.g. "10:00", "14:30"
+  note            String?
+  status          ViewingStatus @default(PENDING)
+  managerNote     String?
+  confirmedDate   DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+

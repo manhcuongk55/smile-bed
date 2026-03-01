@@ -1,18 +1,17 @@
-'use client';
-
-import { motion } from 'framer-motion';
 import { MapPin, Wifi, Wind, Zap, Coffee, Building2, Train, CreditCard, ChevronLeft, Star, Heart, Share2 } from 'lucide-react';
 import Link from 'next/link';
 
-export default function RoomDetail({ params }: { params: { id: string } }) {
-    const room = {
-        title: 'P.402 - smile-bed Landmark 81 View - Ban Công Thoáng',
-        price: 8500000,
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+
+export default async function RoomDetail({ params }: { params: { id: string } }) {
+    let room = {
+        title: 'Đang tải thông tin...',
+        price: 0,
         area: '32m²',
-        floor: 'Tầng 12',
+        floor: 'Tầng trung',
         type: 'Studio',
-        location: '208 Nguyễn Hữu Cảnh, P.22, Bình Thạnh, TP.HCM',
-        description: 'Căn hộ Studio cao cấp với thiết kế hiện đại, đầy đủ nội thất từ giường, tủ, tivi, tủ lạnh đến máy giặt riêng. Đặc biệt view triệu đô hướng thẳng Landmark 81 rất thoáng mát vào buổi tối.',
+        location: 'Đang cập nhật',
+        description: 'Căn hộ Studio cao cấp đầy đủ nội thất từ giường, tủ, tivi, máy giặt riêng.',
         amenities: ['Wifi 5G', 'Điều hòa', 'Thang máy', 'Bảo vệ 24/7', 'Gym', 'Hồ bơi'],
         transit: [
             { mode: 'Bộ hành', dest: 'Trạm Metro số 1', time: '5 phút' },
@@ -26,9 +25,31 @@ export default function RoomDetail({ params }: { params: { id: string } }) {
         ]
     };
 
+    try {
+        const res = await fetch(`${API_URL}/discovery/rooms/${params.id}`, { cache: 'no-store' });
+        if (res.ok) {
+            const data = await res.json();
+            if (data) {
+                room = {
+                    ...room,
+                    title: `${data.roomNumber} - ${data.property?.name || 'Phòng'}`,
+                    price: data.price,
+                    location: data.property?.address || 'TP.HCM',
+                    description: `Phòng ${data.roomNumber} mang đến không gian sống chất lượng cao tại ${data.property?.name || 'đây'}. Được kiểm định bởi smile-bed.`,
+                    nearby: data.property?.nearbyPOIs?.map((poi: any) => ({
+                        name: poi.name, type: poi.type, distance: `${poi.distance}km`
+                    })) || room.nearby
+                };
+            }
+        }
+    } catch (e) {
+        console.error('Fetch detail failed:', e);
+    }
+
+
     return (
-        <div className="bg-slate-50 min-h-screen pt-24 pb-20">
-            <div className="max-w-7xl mx-auto px-6">
+        <div className="bg-slate-50 min-h-screen pt-20 sm:pt-24 pb-20">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6">
                 {/* Back and actions */}
                 <div className="flex justify-between items-center mb-6">
                     <Link href="/" className="flex items-center gap-2 text-slate-500 font-bold hover:text-indigo-600 transition-all">
@@ -45,14 +66,14 @@ export default function RoomDetail({ params }: { params: { id: string } }) {
                 </div>
 
                 {/* Gallery Placeholder */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 h-[500px] mb-10 overflow-hidden rounded-[2.5rem] shadow-2xl">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-2 sm:gap-4 h-[250px] sm:h-[400px] md:h-[500px] mb-6 sm:mb-10 overflow-hidden rounded-2xl sm:rounded-[2.5rem] shadow-xl sm:shadow-2xl">
                     <div className="md:col-span-2 relative group overflow-hidden">
                         <img
                             src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
                             className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
                         />
                     </div>
-                    <div className="md:col-span-1 grid grid-rows-2 gap-4">
+                    <div className="hidden md:grid md:col-span-1 grid-rows-2 gap-2 sm:gap-4">
                         <div className="relative group overflow-hidden">
                             <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800" className="w-full h-full object-cover group-hover:scale-105 transition-all" />
                         </div>
@@ -60,7 +81,7 @@ export default function RoomDetail({ params }: { params: { id: string } }) {
                             <img src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=800" className="w-full h-full object-cover group-hover:scale-105 transition-all" />
                         </div>
                     </div>
-                    <div className="md:col-span-1 relative group overflow-hidden">
+                    <div className="hidden md:block md:col-span-1 relative group overflow-hidden">
                         <img
                             src="https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=800"
                             className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-all duration-1000"
@@ -72,32 +93,32 @@ export default function RoomDetail({ params }: { params: { id: string } }) {
                 </div>
 
                 {/* Content Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-                    <div className="lg:col-span-2 space-y-10">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-12">
+                    <div className="lg:col-span-2 space-y-6 sm:space-y-10">
                         {/* Title & Stats */}
                         <section>
                             <div className="flex flex-wrap gap-2 mb-4">
                                 <span className="bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest border border-indigo-100">Khu vực tốt</span>
                                 <span className="bg-green-50 text-green-600 px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest border border-green-100">Giá ổn định</span>
                             </div>
-                            <h1 className="text-4xl font-black text-slate-900 mb-4 leading-tight">{room.title}</h1>
+                            <h1 className="text-2xl sm:text-4xl font-black text-slate-900 mb-3 sm:mb-4 leading-tight">{room.title}</h1>
                             <div className="flex items-center gap-2 text-slate-500 font-medium mb-8">
                                 <MapPin className="w-5 h-5 text-indigo-600" />
                                 {room.location}
                             </div>
 
-                            <div className="grid grid-cols-3 gap-4 border-y border-slate-100 py-8">
+                            <div className="grid grid-cols-3 gap-2 sm:gap-4 border-y border-slate-100 py-5 sm:py-8">
                                 <div className="text-center border-r border-slate-100">
                                     <p className="text-xs font-bold text-slate-400 uppercase mb-1">Diện tích</p>
-                                    <p className="text-xl font-black text-slate-900">{room.area}</p>
+                                    <p className="text-base sm:text-xl font-black text-slate-900">{room.area}</p>
                                 </div>
                                 <div className="text-center border-r border-slate-100">
                                     <p className="text-xs font-bold text-slate-400 uppercase mb-1">Kiểu phòng</p>
-                                    <p className="text-xl font-black text-slate-900">{room.type}</p>
+                                    <p className="text-base sm:text-xl font-black text-slate-900">{room.type}</p>
                                 </div>
                                 <div className="text-center">
                                     <p className="text-xs font-bold text-slate-400 uppercase mb-1">Tầng cao</p>
-                                    <p className="text-xl font-black text-slate-900">{room.floor}</p>
+                                    <p className="text-base sm:text-xl font-black text-slate-900">{room.floor}</p>
                                 </div>
                             </div>
                         </section>
@@ -111,7 +132,7 @@ export default function RoomDetail({ params }: { params: { id: string } }) {
                         </section>
 
                         {/* Layout focus: Transit & Convenience */}
-                        <section className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-xl">
+                        <section className="bg-white p-5 sm:p-8 rounded-2xl sm:rounded-[2.5rem] border border-slate-100 shadow-xl">
                             <h3 className="text-2xl font-bold mb-8 flex items-center gap-2">
                                 <Train className="w-6 h-6 text-indigo-600" />
                                 Duy chuyển & Tiện ích xung quanh
@@ -157,7 +178,7 @@ export default function RoomDetail({ params }: { params: { id: string } }) {
 
                     {/* Booking Side Card */}
                     <div className="lg:col-span-1">
-                        <div className="sticky top-32 glass p-8 rounded-[2.5rem] shadow-2xl border-white/50">
+                        <div className="lg:sticky lg:top-28 glass p-5 sm:p-8 rounded-2xl sm:rounded-[2.5rem] shadow-2xl border-white/50">
                             <div className="mb-8">
                                 <p className="text-sm font-bold text-slate-400 mb-1">Giá thuê hàng tháng</p>
                                 <div className="flex items-baseline gap-1">
@@ -176,12 +197,16 @@ export default function RoomDetail({ params }: { params: { id: string } }) {
                                 </div>
                             </div>
 
-                            <button className="w-full btn-primary !py-5 !text-lg !font-black !rounded-2xl mb-4 shadow-indigo-300">
-                                Đặt phòng & Ký HĐ Online
-                            </button>
-                            <button className="w-full bg-slate-50 text-slate-900 py-4 rounded-2xl font-bold border border-slate-100 hover:bg-white transition-all">
-                                Yêu cầu xem phòng thực tế
-                            </button>
+                            <Link href={`/onboarding/${params.id}`} className="block">
+                                <button className="w-full btn-primary !py-5 !text-lg !font-black !rounded-2xl mb-4 shadow-indigo-300">
+                                    Đặt phòng & Ký HĐ Online
+                                </button>
+                            </Link>
+                            <Link href={`/viewing/${params.id}`} className="block">
+                                <button className="w-full bg-slate-50 text-slate-900 py-4 rounded-2xl font-bold border border-slate-100 hover:bg-white transition-all">
+                                    Yêu cầu xem phòng thực tế
+                                </button>
+                            </Link>
 
                             <div className="mt-8 pt-6 border-t border-slate-100 flex items-center gap-4">
                                 <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center font-black text-indigo-600">SM</div>

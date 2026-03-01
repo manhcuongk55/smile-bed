@@ -16,7 +16,7 @@ export class DiscoveryService {
                 },
                 status: 'AVAILABLE',
                 property: {
-                    address: location ? { contains: location, mode: 'insensitive' } : undefined,
+                    address: location ? { contains: location } : undefined,
                     owner: verifiedOnly === 'true' ? { role: 'PROPERTY_OWNER' } : undefined,
                 },
             },

@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 
 @Injectable()
@@ -12,7 +12,6 @@ export class BookingService {
         }
 
         return this.prisma.$transaction(async (tx) => {
-            // Find or create User with role TENANT if not exists
             const tenant = await tx.tenant.upsert({
                 where: { userId: tenantId },
                 update: {},
@@ -40,6 +39,63 @@ export class BookingService {
             });
 
             return contract;
+        });
+    }
+
+    // ── Room Viewing ──────────────────────────
+
+    async requestViewing(roomId: string, data: any) {
+        const room = await this.prisma.room.findUnique({
+            where: { id: roomId },
+            include: { property: true },
+        });
+        if (!room) {
+            throw new NotFoundException('Không tìm thấy phòng.');
+        }
+
+        return this.prisma.roomViewing.create({
+            data: {
+                roomId,
+                guestName: data.guestName,
+                guestPhone: data.guestPhone,
+                guestEmail: data.guestEmail || null,
+                preferredDate: new Date(data.preferredDate),
+                preferredTime: data.preferredTime,
+                note: data.note || null,
+            },
+            include: {
+                room: { include: { property: true } },
+            },
+        });
+    }
+
+    async listViewings(status?: string) {
+        const where = status ? { status: status as any } : {};
+        return this.prisma.roomViewing.findMany({
+            where,
+            include: {
+                room: { include: { property: true } },
+            },
+            orderBy: { createdAt: 'desc' },
+        });
+    }
+
+    async updateViewingStatus(id: string, status: string, managerNote?: string) {
+        const viewing = await this.prisma.roomViewing.findUnique({ where: { id } });
+        if (!viewing) {
+            throw new NotFoundException('Không tìm thấy yêu cầu xem phòng.');
+        }
+
+        return this.prisma.roomViewing.update({
+            where: { id },
+            data: {
+                status: status as any,
+                managerNote: managerNote || viewing.managerNote,
+                confirmedDate: status === 'CONFIRMED' ? new Date() : viewing.confirmedDate,
+            },
+            include: {
+                room: { include: { property: true } },
+            },
         });
     }
 }

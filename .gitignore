@@ -1,15 +1,29 @@
+# Dependencies
 node_modules/
+
+# Build outputs
 .next/
 dist/
 build/
+
+# Environment
 .env
 .env.local
+.env.*.local
+
+# Database
+*.db
+*.db-journal
+
+# OS
 .DS_Store
-# NestJS
-/dist
-/node_modules
+
 # IDEs
 .vscode/
 .idea/
+
 # Monorepo
 .turbo
+
+# Prisma
+generated/

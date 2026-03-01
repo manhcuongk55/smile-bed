@@ -5,9 +5,11 @@ import { AuthModule } from './auth/auth.module';
 import { PrismaService } from './prisma.service';
 import { DiscoveryModule } from './discovery/discovery.module';
 import { BookingModule } from './booking/booking.module';
+import { LifecycleModule } from './lifecycle/lifecycle.module';
+import { MarketplaceModule } from './marketplace/marketplace.module';
 
 @Module({
-  imports: [AuthModule, DiscoveryModule, BookingModule],
+  imports: [AuthModule, DiscoveryModule, BookingModule, LifecycleModule, MarketplaceModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })
