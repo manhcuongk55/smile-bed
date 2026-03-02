@@ -27,3 +27,5 @@ build/
 
 # Prisma
 generated/
+.vercel
+.env*.local
