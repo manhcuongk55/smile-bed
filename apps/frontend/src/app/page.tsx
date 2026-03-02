@@ -3,8 +3,6 @@ import RoomCard from '@/components/discovery/RoomCard';
 import { ShieldCheck, Info } from 'lucide-react';
 import Link from 'next/link';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-
 const MOCK_ROOMS = [
     {
         id: '1',
@@ -41,7 +39,7 @@ const MOCK_ROOMS = [
 export default async function Home() {
     let displayRooms = MOCK_ROOMS;
     try {
-        const res = await fetch(`${API_URL}/discovery/rooms`, { cache: 'no-store' });
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/discovery/rooms`, { cache: 'no-store' });
         if (res.ok) {
             const data = await res.json();
             if (data && data.length > 0) {

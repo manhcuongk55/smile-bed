@@ -1,0 +1,212 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  SUPER_ADMIN
+  PROPERTY_OWNER
+  MANAGER
+  TENANT
+}
+
+enum RoomStatus {
+  AVAILABLE
+  RESERVED
+  OCCUPIED
+  MAINTENANCE
+}
+
+enum InvoiceStatus {
+  UNPAID
+  PAID
+  OVERDUE
+}
+
+enum MaintenanceStatus {
+  NEW
+  IN_PROGRESS
+  DONE
+}
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  password      String
+  role          Role      @default(TENANT)
+  firstName     String?
+  lastName      String?
+  phone         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  properties    Property[] @relation("PropertyOwner")
+  managedProperties Property[] @relation("PropertyManager")
+  tenantProfile Tenant?
+  maintenanceRequests MaintenanceRequest[] @relation("Requester")
+}
+
+model Property {
+  id          String   @id @default(uuid())
+  name        String
+  address     String
+  latitude    Float?
+  longitude   Float?
+  ownerId     String
+  owner       User     @relation("PropertyOwner", fields: [ownerId], references: [id])
+  managerId   String?
+  manager     User?    @relation("PropertyManager", fields: [managerId], references: [id])
+  
+  rooms       Room[]
+  nearbyPOIs  NearbyPOI[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Room {
+  id          String     @id @default(uuid())
+  propertyId  String
+  property    Property   @relation(fields: [propertyId], references: [id])
+  roomNumber  String
+  price       Float
+  status      RoomStatus @default(AVAILABLE)
+  features    String
+  
+  contracts   Contract[]
+  readings    Reading[]
+  maintenance MaintenanceRequest[]
+  viewings    RoomViewing[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Tenant {
+  id                String   @id @default(uuid())
+  userId            String   @unique
+  user              User     @relation(fields: [userId], references: [id])
+  idNumber          String?
+  phone             String?
+  deposit           Float    @default(0)
+  preferredBudget   Float?
+  preferredTransit  String?
+  
+  contracts         Contract[]
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model Contract {
+  id          String    @id @default(uuid())
+  roomId      String
+  room        Room      @relation(fields: [roomId], references: [id])
+  tenantId    String
+  tenant      Tenant    @relation(fields: [tenantId], references: [id])
+  startDate   DateTime
+  endDate     DateTime?
+  rentAmount  Float
+  depositAmount Float
+  isActive    Boolean   @default(true)
+  status      String    @default("PENDING")
+  type        String    @default("long_term")
+  
+  invoices    Invoice[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Reading {
+  id                 String   @id @default(uuid())
+  roomId             String
+  room               Room     @relation(fields: [roomId], references: [id])
+  electricityReading Float
+  waterReading       Float
+  readingDate        DateTime @default(now())
+}
+
+model Invoice {
+  id              String        @id @default(uuid())
+  contractId      String
+  contract        Contract      @relation(fields: [contractId], references: [id])
+  period          String
+  electricityCost Float
+  waterCost       Float
+  baseRent        Float
+  total           Float
+  status          InvoiceStatus @default(UNPAID)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+model MaintenanceRequest {
+  id          String            @id @default(uuid())
+  roomId      String
+  room        Room              @relation(fields: [roomId], references: [id])
+  tenantId    String
+  tenant      User              @relation("Requester", fields: [tenantId], references: [id])
+  description String
+  imageUrl    String?
+  status      MaintenanceStatus @default(NEW)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+}
+
+model NearbyPOI {
+  id          String   @id @default(uuid())
+  propertyId  String
+  property    Property @relation(fields: [propertyId], references: [id])
+  name        String
+  type        String
+  distance    Float
+}
+
+model Asset {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  type        String
+  price       Float
+  propertyId  String?
+  roomId      String?
+  status      String   @default("AVAILABLE")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Service {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  price       Float
+  frequency   String
+  propertyId  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum ViewingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+model RoomViewing {
+  id              String        @id @default(uuid())
+  roomId          String
+  room            Room          @relation(fields: [roomId], references: [id])
+  guestName       String
+  guestPhone      String
+  guestEmail      String?
+  preferredDate   DateTime
+  preferredTime   String
+  note            String?
+  status          ViewingStatus @default(PENDING)
+  managerNote     String?
+  confirmedDate   DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}

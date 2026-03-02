@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Calendar, Clock, User, Phone, Mail, MessageSquare, CheckCircle, X, Send } from 'lucide-react';
 import Link from 'next/link';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+
 
 export default function ViewingRequestPage({ params }: { params: { id: string } }) {
     const [form, setForm] = useState({
@@ -27,7 +27,7 @@ export default function ViewingRequestPage({ params }: { params: { id: string } 
         setError('');
 
         try {
-            const res = await fetch(`${API_URL}/booking/viewing/${params.id}`, {
+            const res = await fetch(`/api/booking/viewing/${params.id}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(form),

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { Calendar, Clock, User, Phone, Mail, CheckCircle, XCircle, Eye, ChevronDown, MessageSquare, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+
 
 interface Viewing {
     id: string;
@@ -38,7 +38,7 @@ export default function ViewingManagementPage() {
 
     const fetchViewings = async () => {
         try {
-            const url = filter ? `${API_URL}/booking/viewings?status=${filter}` : `${API_URL}/booking/viewings`;
+            const url = filter ? `/api/booking/viewings?status=${filter}` : `/api/booking/viewings`;
             const res = await fetch(url);
             if (res.ok) {
                 const data = await res.json();
@@ -59,7 +59,7 @@ export default function ViewingManagementPage() {
     const handleAction = async (id: string, action: 'confirm' | 'cancel' | 'complete') => {
         setActionId(id);
         try {
-            const res = await fetch(`${API_URL}/booking/viewing/${id}/${action}`, {
+            const res = await fetch(`/api/booking/viewing/${id}/${action}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ managerNote: `Đã ${action === 'confirm' ? 'xác nhận' : action === 'cancel' ? 'hủy' : 'hoàn tất'} bởi quản lý.` }),

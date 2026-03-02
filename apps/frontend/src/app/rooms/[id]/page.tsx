@@ -1,7 +1,7 @@
 import { MapPin, Wifi, Wind, Zap, Coffee, Building2, Train, CreditCard, ChevronLeft, Star, Heart, Share2 } from 'lucide-react';
 import Link from 'next/link';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+
 
 export default async function RoomDetail({ params }: { params: { id: string } }) {
     let room = {
@@ -26,7 +26,7 @@ export default async function RoomDetail({ params }: { params: { id: string } })
     };
 
     try {
-        const res = await fetch(`${API_URL}/discovery/rooms/${params.id}`, { cache: 'no-store' });
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/discovery/rooms/${params.id}`, { cache: 'no-store' });
         if (res.ok) {
             const data = await res.json();
             if (data) {
