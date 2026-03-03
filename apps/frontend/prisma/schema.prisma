@@ -1,10 +1,12 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 enum Role {
@@ -33,6 +35,43 @@ enum MaintenanceStatus {
   DONE
 }
 
+enum ReferralStatus {
+  CLICKED
+  REGISTERED
+  BOOKED
+  COMMISSIONED
+}
+
+enum PayoutStatus {
+  PENDING
+  APPROVED
+  PAID
+  REJECTED
+}
+
+enum TransactionType {
+  DEPOSIT
+  RENT
+  UTILITY
+  SERVICE_FEE
+  PENALTY
+  REFUND
+  COMMISSION
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+}
+
+enum CheckoutStatus {
+  REQUESTED
+  INSPECTING
+  RECONCILED
+  COMPLETED
+}
+
 model User {
   id            String    @id @default(uuid())
   email         String    @unique
@@ -48,6 +87,49 @@ model User {
   managedProperties Property[] @relation("PropertyManager")
   tenantProfile Tenant?
   maintenanceRequests MaintenanceRequest[] @relation("Requester")
+  referralCode     ReferralCode?  @relation("UserReferralCode")
+  referredBy       ReferralConversion[] @relation("ReferredByCode")
+}
+
+model ReferralCode {
+  id          String   @id @default(uuid())
+  code        String   @unique
+  userId      String   @unique
+  user        User     @relation("UserReferralCode", fields: [userId], references: [id])
+  totalClicks Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  conversions ReferralConversion[]
+}
+
+model ReferralConversion {
+  id              String         @id @default(uuid())
+  referralCodeId  String
+  referralCode    ReferralCode   @relation(fields: [referralCodeId], references: [id])
+  referredUserId  String?
+  referredUser    User?          @relation("ReferredByCode", fields: [referredUserId], references: [id])
+  status          ReferralStatus @default(CLICKED)
+  contractId      String?
+  commissionRate  Float          @default(0.05)
+  commissionAmount Float?
+  ipAddress       String?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  payouts         CommissionPayout[]
+}
+
+model CommissionPayout {
+  id            String       @id @default(uuid())
+  conversionId  String
+  conversion    ReferralConversion @relation(fields: [conversionId], references: [id])
+  amount        Float
+  status        PayoutStatus @default(PENDING)
+  note          String?
+  paidAt        DateTime?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
 }
 
 model Property {
@@ -63,6 +145,7 @@ model Property {
   
   rooms       Room[]
   nearbyPOIs  NearbyPOI[]
+  safetyDocuments SafetyDocument[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -89,33 +172,44 @@ model Tenant {
   userId            String   @unique
   user              User     @relation(fields: [userId], references: [id])
   idNumber          String?
+  idCardNumber      String?
+  idCardFrontUrl    String?
+  idCardBackUrl     String?
   phone             String?
+  emergencyContact  String?
   deposit           Float    @default(0)
   preferredBudget   Float?
   preferredTransit  String?
   
   contracts         Contract[]
+  violations        Violation[]
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 }
 
 model Contract {
-  id          String    @id @default(uuid())
-  roomId      String
-  room        Room      @relation(fields: [roomId], references: [id])
-  tenantId    String
-  tenant      Tenant    @relation(fields: [tenantId], references: [id])
-  startDate   DateTime
-  endDate     DateTime?
-  rentAmount  Float
+  id            String    @id @default(uuid())
+  roomId        String
+  room          Room      @relation(fields: [roomId], references: [id])
+  tenantId      String
+  tenant        Tenant    @relation(fields: [tenantId], references: [id])
+  startDate     DateTime
+  endDate       DateTime?
+  rentAmount    Float
   depositAmount Float
-  isActive    Boolean   @default(true)
-  status      String    @default("PENDING")
-  type        String    @default("long_term")
+  isActive      Boolean   @default(true)
+  status        String    @default("PENDING") // PENDING, ACTIVE, TERMINATED
+  type          String    @default("long_term") // short_term, long_term
+  activatedAt   DateTime?
+  terminatedAt  DateTime?
   
-  invoices    Invoice[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  invoices          Invoice[]
+  transactions      Transaction[]
+  handoverChecklist HandoverChecklist[]
+  violations        Violation[]
+  checkoutRequests  CheckoutRequest[]
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 }
 
 model Reading {
@@ -131,12 +225,16 @@ model Invoice {
   id              String        @id @default(uuid())
   contractId      String
   contract        Contract      @relation(fields: [contractId], references: [id])
-  period          String
+  period          String        // e.g., "2024-03"
   electricityCost Float
   waterCost       Float
   baseRent        Float
+  serviceFee      Float         @default(0)
+  penaltyFee      Float         @default(0)
   total           Float
   status          InvoiceStatus @default(UNPAID)
+  qrCodeUrl       String?
+  violations      Violation[]
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 }
@@ -159,18 +257,18 @@ model NearbyPOI {
   propertyId  String
   property    Property @relation(fields: [propertyId], references: [id])
   name        String
-  type        String
-  distance    Float
+  type        String   // e.g., "supermarket", "station"
+  distance    Float    // in meters or km
 }
 
 model Asset {
   id          String   @id @default(uuid())
   name        String
   description String?
-  type        String
+  type        String   // "RENTED", "PURCHASED"
   price       Float
   propertyId  String?
-  roomId      String?
+  roomId      String?  // If assigned
   status      String   @default("AVAILABLE")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -181,7 +279,7 @@ model Service {
   name        String
   description String?
   price       Float
-  frequency   String
+  frequency   String   // "MONTHLY", "ONE_TIME"
   propertyId  String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -202,11 +300,75 @@ model RoomViewing {
   guestPhone      String
   guestEmail      String?
   preferredDate   DateTime
-  preferredTime   String
+  preferredTime   String        // e.g. "10:00", "14:30"
   note            String?
   status          ViewingStatus @default(PENDING)
   managerNote     String?
   confirmedDate   DateTime?
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
+}
+
+model Transaction {
+  id              String            @id @default(uuid())
+  contractId      String
+  contract        Contract          @relation(fields: [contractId], references: [id])
+  type            TransactionType
+  amount          Float
+  description     String?
+  referralCodeId  String?
+  status          TransactionStatus @default(PENDING)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+}
+
+model HandoverChecklist {
+  id          String   @id @default(uuid())
+  contractId  String
+  contract    Contract @relation(fields: [contractId], references: [id])
+  itemName    String
+  condition   String   @default("GOOD") // GOOD, FAIR, DAMAGED
+  photoUrl    String?
+  note        String?
+  checkedAt   DateTime @default(now())
+}
+
+model Violation {
+  id              String   @id @default(uuid())
+  contractId      String
+  contract        Contract @relation(fields: [contractId], references: [id])
+  tenantId        String
+  tenant          Tenant   @relation(fields: [tenantId], references: [id])
+  rule            String
+  description     String
+  penaltyAmount   Float
+  occurrenceCount Int      @default(1)
+  invoiceId       String?
+  invoice         Invoice? @relation(fields: [invoiceId], references: [id])
+  createdAt       DateTime @default(now())
+}
+
+model SafetyDocument {
+  id          String   @id @default(uuid())
+  propertyId  String
+  property    Property @relation(fields: [propertyId], references: [id])
+  title       String
+  type        String   // VIDEO, PDF, IMAGE
+  url         String
+  createdAt   DateTime @default(now())
+}
+
+model CheckoutRequest {
+  id            String         @id @default(uuid())
+  contractId    String
+  contract      Contract       @relation(fields: [contractId], references: [id])
+  requestDate   DateTime       @default(now())
+  targetDate    DateTime
+  depositAmount Float
+  deductions    String?        // JSON string for deduction breakdown
+  refundAmount  Float?
+  status        CheckoutStatus @default(REQUESTED)
+  note          String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 }

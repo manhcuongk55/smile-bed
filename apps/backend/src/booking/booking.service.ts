@@ -38,7 +38,73 @@ export class BookingService {
                 data: { status: 'RESERVED' },
             });
 
+            // Create deposit transaction (Giao_Dich)
+            await tx.transaction.create({
+                data: {
+                    contractId: contract.id,
+                    type: 'DEPOSIT',
+                    amount: room.price,
+                    description: 'Đặt cọc giữ chỗ online',
+                    referralCodeId: data.referralCode || null,
+                    status: 'PENDING',
+                },
+            });
+
             return contract;
+        });
+    }
+
+    async cancelDeposit(contractId: string) {
+        const contract = await this.prisma.contract.findUnique({
+            where: { id: contractId },
+            include: {
+                transactions: { where: { type: 'DEPOSIT' } },
+            },
+        });
+        if (!contract || contract.status !== 'PENDING') {
+            throw new NotFoundException('Hợp đồng không tồn tại hoặc đã được kích hoạt.');
+        }
+
+        const depositTx = contract.transactions[0];
+        const depositAmount = depositTx?.amount || contract.depositAmount;
+
+        return this.prisma.$transaction(async (tx) => {
+            // Terminate contract
+            await tx.contract.update({
+                where: { id: contractId },
+                data: { status: 'TERMINATED', isActive: false, terminatedAt: new Date() },
+            });
+
+            // Release room
+            await tx.room.update({
+                where: { id: contract.roomId },
+                data: { status: 'AVAILABLE' },
+            });
+
+            // Cancel deposit transaction
+            if (depositTx) {
+                await tx.transaction.update({
+                    where: { id: depositTx.id },
+                    data: { status: 'CANCELLED' },
+                });
+            }
+
+            // If CTV referral exists, create 50% commission for CTV (Smile Home policy)
+            if (depositTx?.referralCodeId) {
+                const ctvCommission = depositAmount * 0.5;
+                await tx.transaction.create({
+                    data: {
+                        contractId,
+                        type: 'COMMISSION',
+                        amount: ctvCommission,
+                        description: 'Hoa hồng CTV - Khách huỷ cọc (50% theo chính sách Smile Home)',
+                        referralCodeId: depositTx.referralCodeId,
+                        status: 'COMPLETED',
+                    },
+                });
+            }
+
+            return { message: 'Đã huỷ cọc thành công.' };
         });
     }
 

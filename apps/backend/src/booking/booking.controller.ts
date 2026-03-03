@@ -11,6 +11,11 @@ export class BookingController {
         return this.bookingService.createBooking(tenantId, roomId, data);
     }
 
+    @Post('cancel-deposit/:contractId')
+    async cancelDeposit(@Param('contractId') contractId: string) {
+        return this.bookingService.cancelDeposit(contractId);
+    }
+
     // ── Room Viewing Endpoints ──────────────
 
     @Post('viewing/:roomId')

@@ -50,6 +50,29 @@ enum PayoutStatus {
   REJECTED
 }
 
+enum TransactionType {
+  DEPOSIT
+  RENT
+  UTILITY
+  SERVICE_FEE
+  PENALTY
+  REFUND
+  COMMISSION
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+}
+
+enum CheckoutStatus {
+  REQUESTED
+  INSPECTING
+  RECONCILED
+  COMPLETED
+}
+
 model User {
   id            String    @id @default(uuid())
   email         String    @unique
@@ -123,6 +146,7 @@ model Property {
   
   rooms       Room[]
   nearbyPOIs  NearbyPOI[]
+  safetyDocuments SafetyDocument[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -149,33 +173,44 @@ model Tenant {
   userId            String   @unique
   user              User     @relation(fields: [userId], references: [id])
   idNumber          String?
+  idCardNumber      String?
+  idCardFrontUrl    String?
+  idCardBackUrl     String?
   phone             String?
+  emergencyContact  String?
   deposit           Float    @default(0)
   preferredBudget   Float?
   preferredTransit  String?
   
   contracts         Contract[]
+  violations        Violation[]
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 }
 
 model Contract {
-  id          String    @id @default(uuid())
-  roomId      String
-  room        Room      @relation(fields: [roomId], references: [id])
-  tenantId    String
-  tenant      Tenant    @relation(fields: [tenantId], references: [id])
-  startDate   DateTime
-  endDate     DateTime?
-  rentAmount  Float
+  id            String    @id @default(uuid())
+  roomId        String
+  room          Room      @relation(fields: [roomId], references: [id])
+  tenantId      String
+  tenant        Tenant    @relation(fields: [tenantId], references: [id])
+  startDate     DateTime
+  endDate       DateTime?
+  rentAmount    Float
   depositAmount Float
-  isActive    Boolean   @default(true)
-  status      String    @default("PENDING") // PENDING, ACTIVE, TERMINATED
-  type        String    @default("long_term") // short_term, long_term
+  isActive      Boolean   @default(true)
+  status        String    @default("PENDING") // PENDING, ACTIVE, TERMINATED
+  type          String    @default("long_term") // short_term, long_term
+  activatedAt   DateTime?
+  terminatedAt  DateTime?
   
-  invoices    Invoice[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  invoices          Invoice[]
+  transactions      Transaction[]
+  handoverChecklist HandoverChecklist[]
+  violations        Violation[]
+  checkoutRequests  CheckoutRequest[]
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 }
 
 model Reading {
@@ -195,8 +230,12 @@ model Invoice {
   electricityCost Float
   waterCost       Float
   baseRent        Float
+  serviceFee      Float         @default(0)
+  penaltyFee      Float         @default(0)
   total           Float
   status          InvoiceStatus @default(UNPAID)
+  qrCodeUrl       String?
+  violations      Violation[]
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 }
@@ -271,3 +310,66 @@ model RoomViewing {
   updatedAt       DateTime      @updatedAt
 }
 
+model Transaction {
+  id              String            @id @default(uuid())
+  contractId      String
+  contract        Contract          @relation(fields: [contractId], references: [id])
+  type            TransactionType
+  amount          Float
+  description     String?
+  referralCodeId  String?
+  status          TransactionStatus @default(PENDING)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+}
+
+model HandoverChecklist {
+  id          String   @id @default(uuid())
+  contractId  String
+  contract    Contract @relation(fields: [contractId], references: [id])
+  itemName    String
+  condition   String   @default("GOOD") // GOOD, FAIR, DAMAGED
+  photoUrl    String?
+  note        String?
+  checkedAt   DateTime @default(now())
+}
+
+model Violation {
+  id              String   @id @default(uuid())
+  contractId      String
+  contract        Contract @relation(fields: [contractId], references: [id])
+  tenantId        String
+  tenant          Tenant   @relation(fields: [tenantId], references: [id])
+  rule            String
+  description     String
+  penaltyAmount   Float
+  occurrenceCount Int      @default(1)
+  invoiceId       String?
+  invoice         Invoice? @relation(fields: [invoiceId], references: [id])
+  createdAt       DateTime @default(now())
+}
+
+model SafetyDocument {
+  id          String   @id @default(uuid())
+  propertyId  String
+  property    Property @relation(fields: [propertyId], references: [id])
+  title       String
+  type        String   // VIDEO, PDF, IMAGE
+  url         String
+  createdAt   DateTime @default(now())
+}
+
+model CheckoutRequest {
+  id            String         @id @default(uuid())
+  contractId    String
+  contract      Contract       @relation(fields: [contractId], references: [id])
+  requestDate   DateTime       @default(now())
+  targetDate    DateTime
+  depositAmount Float
+  deductions    String?        // JSON string for deduction breakdown
+  refundAmount  Float?
+  status        CheckoutStatus @default(REQUESTED)
+  note          String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}

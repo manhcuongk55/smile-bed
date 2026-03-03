@@ -13,7 +13,7 @@ export async function POST(
         return NextResponse.json({ error: 'Phòng không khả dụng.' }, { status: 400 });
     }
 
-    const result = await prisma.$transaction(async (tx) => {
+    const result = await prisma.$transaction(async (tx: any) => {
         const tenant = await tx.tenant.upsert({
             where: { userId: tenantId },
             update: {},
