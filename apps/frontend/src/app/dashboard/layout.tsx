@@ -1,4 +1,4 @@
-import { Home, FileText, Wrench, CreditCard, User, ShoppingBag, ShieldCheck } from 'lucide-react';
+import { Home, FileText, Wrench, CreditCard, User, ShoppingBag, ShieldCheck, Megaphone } from 'lucide-react';
 import Link from 'next/link';
 
 export default function DashboardLayout({
@@ -13,6 +13,7 @@ export default function DashboardLayout({
         { icon: CreditCard, label: 'Hóa đơn', href: '/dashboard/bills' },
         { icon: Wrench, label: 'Báo sự cố', href: '/dashboard/maintenance' },
         { icon: ShoppingBag, label: 'Cửa hàng', href: '/dashboard/marketplace' },
+        { icon: Megaphone, label: 'CTV Sale', href: '/dashboard/referral' },
         { icon: User, label: 'Hồ sơ', href: '/dashboard/profile' },
     ];
 

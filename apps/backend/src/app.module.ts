@@ -7,9 +7,10 @@ import { DiscoveryModule } from './discovery/discovery.module';
 import { BookingModule } from './booking/booking.module';
 import { LifecycleModule } from './lifecycle/lifecycle.module';
 import { MarketplaceModule } from './marketplace/marketplace.module';
+import { ReferralModule } from './referral/referral.module';
 
 @Module({
-  imports: [AuthModule, DiscoveryModule, BookingModule, LifecycleModule, MarketplaceModule],
+  imports: [AuthModule, DiscoveryModule, BookingModule, LifecycleModule, MarketplaceModule, ReferralModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })

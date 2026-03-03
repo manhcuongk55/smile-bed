@@ -36,6 +36,20 @@ enum MaintenanceStatus {
   DONE
 }
 
+enum ReferralStatus {
+  CLICKED
+  REGISTERED
+  BOOKED
+  COMMISSIONED
+}
+
+enum PayoutStatus {
+  PENDING
+  APPROVED
+  PAID
+  REJECTED
+}
+
 model User {
   id            String    @id @default(uuid())
   email         String    @unique
@@ -51,6 +65,49 @@ model User {
   managedProperties Property[] @relation("PropertyManager")
   tenantProfile Tenant?
   maintenanceRequests MaintenanceRequest[] @relation("Requester")
+  referralCode     ReferralCode?  @relation("UserReferralCode")
+  referredBy       ReferralConversion[] @relation("ReferredByCode")
+}
+
+model ReferralCode {
+  id          String   @id @default(uuid())
+  code        String   @unique
+  userId      String   @unique
+  user        User     @relation("UserReferralCode", fields: [userId], references: [id])
+  totalClicks Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  conversions ReferralConversion[]
+}
+
+model ReferralConversion {
+  id              String         @id @default(uuid())
+  referralCodeId  String
+  referralCode    ReferralCode   @relation(fields: [referralCodeId], references: [id])
+  referredUserId  String?
+  referredUser    User?          @relation("ReferredByCode", fields: [referredUserId], references: [id])
+  status          ReferralStatus @default(CLICKED)
+  contractId      String?
+  commissionRate  Float          @default(0.05)
+  commissionAmount Float?
+  ipAddress       String?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  payouts         CommissionPayout[]
+}
+
+model CommissionPayout {
+  id            String       @id @default(uuid())
+  conversionId  String
+  conversion    ReferralConversion @relation(fields: [conversionId], references: [id])
+  amount        Float
+  status        PayoutStatus @default(PENDING)
+  note          String?
+  paidAt        DateTime?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
 }
 
 model Property {
