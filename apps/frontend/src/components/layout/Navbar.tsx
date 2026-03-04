@@ -25,6 +25,7 @@ export default function Navbar() {
                     <Link href="/" className="hover:text-indigo-600 transition-colors">Tìm phòng</Link>
                     <Link href="/dashboard/my-room" className="hover:text-indigo-600 transition-colors">Phòng của tôi</Link>
                     <Link href="/dashboard/bills" className="hover:text-indigo-600 transition-colors">Hóa đơn</Link>
+                    <Link href="/partners" className="hover:text-indigo-600 transition-colors">Đối tác</Link>
                     <Link href="/marketplace" className="hover:text-indigo-600 transition-colors">Dịch vụ</Link>
                 </div>
 
@@ -60,6 +61,9 @@ export default function Navbar() {
                         </Link>
                         <Link href="/dashboard/bills" onClick={() => setIsOpen(false)} className="block px-4 py-3 rounded-xl text-slate-700 font-medium hover:bg-indigo-50 hover:text-indigo-600 transition-all">
                             💳 Hóa đơn
+                        </Link>
+                        <Link href="/partners" onClick={() => setIsOpen(false)} className="block px-4 py-3 rounded-xl text-slate-700 font-medium hover:bg-indigo-50 hover:text-indigo-600 transition-all">
+                            🤝 Đối tác
                         </Link>
                         <Link href="/marketplace" onClick={() => setIsOpen(false)} className="block px-4 py-3 rounded-xl text-slate-700 font-medium hover:bg-indigo-50 hover:text-indigo-600 transition-all">
                             🛒 Dịch vụ
