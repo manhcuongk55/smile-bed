@@ -24,6 +24,7 @@ export default function Navbar() {
                 <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
                     <Link href="/" className="hover:text-indigo-600 transition-colors">Tìm phòng</Link>
                     <Link href="/khu-vuc" className="hover:text-indigo-600 transition-colors flex items-center gap-1">📍 Khu vực</Link>
+                    <Link href="/smile-future" className="hover:text-indigo-600 transition-colors flex items-center gap-1">🎓 Smile Future</Link>
                     <Link href="/share-vui" className="hover:text-indigo-600 transition-colors flex items-center gap-1">🎬 Share Vui</Link>
                     <Link href="/smile-home" className="hover:text-indigo-600 transition-colors flex items-center gap-1">🏠 Smile Home</Link>
                     <Link href="/dashboard/my-room" className="hover:text-indigo-600 transition-colors">Phòng của tôi</Link>

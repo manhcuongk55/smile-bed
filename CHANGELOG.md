@@ -4,6 +4,39 @@ Ghi chú version cho mỗi lần deploy. Format: `vX.Y.Z` (Major.Feature.Patch)
 
 ---
 
+## v1.7.0 — Smile Future Campaign (2026-03-07)
+**Deploy:** `(pending)` → Vercel auto-deploy từ `main`
+**Machine:** Antigravity AI
+**Files changed:** 4 files, +900 lines
+
+### Chiến dịch "Smile Future – Nhà Trọ Tương Lai"
+Target: Mùa nhập học T7-T9/2026 · 50k+ users · 100 phòng miễn phí
+
+#### Phase 1: `/smile-future` – School Match Quiz
+- Quiz 5 phút: 5 câu hỏi → gợi ý top 5 trường phù hợp (12+ ĐH HN & HCM)
+- Career matching (12 ngành nghề)
+- Dữ liệu trường 2026: ĐH QG HN/HCM, Bách khoa, Kinh tế, Y Dược, FPT...
+- Share result Zalo/FB/TikTok (#SmileFuture #ChonTruongHopBan)
+- Campaign stats: 100 phòng free, 12+ trường, 10k+ bạn bè, 0đ CAC
+- Impact stories + partner school tags
+
+#### Phase 2: `/smile-future/help` – Help Profile
+- Profile sinh viên khó khăn + câu chuyện hoàn cảnh
+- Community voting system (ẩn danh)
+- Top 100 vote → tặng phòng 3-6 tháng
+- Progress bar tracking (X/100 phòng đã duyệt)
+- Apply form: tên, tuổi, trường, story, nhu cầu
+- NPO partner section (Ngày Việt, Tony Buổi Sáng)
+
+#### Phase 3: `/smile-future/friends` – Friend Map
+- Tab Bạn bè: match by interest/school (match score %)
+- Tab Nhiệm vụ: Community relay gamification (confetti + points)
+- Tab BXH Trường: Podium top 3 + full ranking (ĐH QG HN vs HCM)
+- Invite loop: Mời bạn → +50k quỹ nhà
+- Share BXH viral: "Trường bạn hạng mấy?"
+
+---
+
 ## v1.6.0 — Thợ Uy Tín Marketplace (2026-03-07)
 **Deploy:** `(pending push)` → Vercel auto-deploy từ `main`
 **Machine:** Antigravity AI
