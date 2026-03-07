@@ -1,4 +1,4 @@
-import { Home, FileText, Wrench, CreditCard, User, ShoppingBag, ShieldCheck, Megaphone, BookOpen, Flame, LogOut } from 'lucide-react';
+import { Home, FileText, Wrench, CreditCard, User, ShoppingBag, ShieldCheck, Megaphone, BookOpen, Flame, LogOut, Video, Map } from 'lucide-react';
 import Link from 'next/link';
 
 export default function DashboardLayout({
@@ -16,6 +16,8 @@ export default function DashboardLayout({
         { icon: Wrench, label: 'Báo sự cố', href: '/dashboard/maintenance' },
         { icon: ShoppingBag, label: 'Cửa hàng', href: '/dashboard/marketplace' },
         { icon: Megaphone, label: 'CTV Sale', href: '/dashboard/referral' },
+        { icon: Video, label: '🎬 Share Vui', href: '/share-vui' },
+        { icon: Map, label: '🗺️ Mystery Map', href: '/dashboard/mystery-map' },
         { icon: LogOut, label: 'Trả phòng', href: '/dashboard/checkout' },
         { icon: User, label: 'Hồ sơ', href: '/dashboard/profile' },
     ];

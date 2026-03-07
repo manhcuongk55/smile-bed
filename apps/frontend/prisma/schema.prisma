@@ -89,6 +89,11 @@ model User {
   maintenanceRequests MaintenanceRequest[] @relation("Requester")
   referralCode     ReferralCode?  @relation("UserReferralCode")
   referredBy       ReferralConversion[] @relation("ReferredByCode")
+  
+  // Share Vui & Mystery Map
+  challengeVideos  ChallengeVideo[]  @relation("UserVideos")
+  puzzlePieces     PuzzlePiece[]     @relation("UserPuzzles")
+  blindBoxRewards  BlindBoxReward[]  @relation("UserBlindBox")
 }
 
 model ReferralCode {
@@ -371,4 +376,139 @@ model CheckoutRequest {
   note          String?
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
+}
+
+// =============================================
+// SHARE VUI – Challenge Ở Ghép Viral
+// =============================================
+
+enum ChallengeFormat {
+  BEFORE_AFTER
+  A_DAY_IN_LIFE
+  HOUSE_RULES
+  IDEAL_ROOMMATE
+  SAVINGS_CHALLENGE
+}
+
+model ChallengeVideo {
+  id            String          @id @default(uuid())
+  title         String
+  description   String?
+  videoUrl      String
+  thumbnailUrl  String?
+  format        ChallengeFormat
+  hashtags      String          // Comma-separated hashtags
+  likes         Int             @default(0)
+  shares        Int             @default(0)
+  views         Int             @default(0)
+  points        Int             @default(0)
+  userId        String
+  user          User            @relation("UserVideos", fields: [userId], references: [id])
+  propertyId    String?
+  isApproved    Boolean         @default(false)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  videoLikes    VideoLike[]
+}
+
+model VideoLike {
+  id        String          @id @default(uuid())
+  videoId   String
+  video     ChallengeVideo  @relation(fields: [videoId], references: [id])
+  userId    String
+  createdAt DateTime        @default(now())
+
+  @@unique([videoId, userId])
+}
+
+model ChallengeReward {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  tier        String   // "GOLD", "SILVER", "BRONZE"
+  prize       String   // Description of the prize
+  minPoints   Int
+  imageUrl    String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+}
+
+// =============================================
+// SMILE MYSTERY MAP – Bản Đồ Bí Mật
+// =============================================
+
+enum PieceRarity {
+  COMMON
+  UNCOMMON
+  RARE
+  LEGENDARY
+}
+
+enum ExchangeStatus {
+  OPEN
+  ACCEPTED
+  CANCELLED
+  COMPLETED
+}
+
+model PuzzlePiece {
+  id          String      @id @default(uuid())
+  name        String
+  imageUrl    String?
+  rarity      PieceRarity @default(COMMON)
+  mapRegion   String      // Which part of the map this belongs to
+  userId      String
+  user        User        @relation("UserPuzzles", fields: [userId], references: [id])
+  propertyId  String
+  earnedFrom  String?     // Description of how it was earned
+  isTraded    Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+
+  offeredIn   PuzzleExchange[] @relation("OfferedPiece")
+  wantedIn    PuzzleExchange[] @relation("WantedPiece")
+}
+
+model PuzzleExchange {
+  id              String         @id @default(uuid())
+  offeredPieceId  String
+  offeredPiece    PuzzlePiece    @relation("OfferedPiece", fields: [offeredPieceId], references: [id])
+  wantedPieceId   String?
+  wantedPiece     PuzzlePiece?   @relation("WantedPiece", fields: [wantedPieceId], references: [id])
+  wantedPieceName String?        // Text description of what they want
+  offererId       String
+  accepterId      String?
+  status          ExchangeStatus @default(OPEN)
+  message         String?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+}
+
+model BuildingQuest {
+  id                String   @id @default(uuid())
+  title             String
+  description       String
+  propertyId        String
+  targetActions     Int      // e.g., 500 relay tasks
+  currentActions    Int      @default(0)
+  rewardDescription String   // What the building gets
+  isCompleted       Boolean  @default(false)
+  startDate         DateTime @default(now())
+  endDate           DateTime
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model BlindBoxReward {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  type        String   // "VOUCHER", "PRIORITY_CARD", "FREE_SERVICE", "VIRTUAL_BADGE"
+  value       String   // JSON or string describing the reward value
+  imageUrl    String?
+  userId      String
+  user        User     @relation("UserBlindBox", fields: [userId], references: [id])
+  questId     String?
+  isRedeemed  Boolean  @default(false)
+  createdAt   DateTime @default(now())
 }

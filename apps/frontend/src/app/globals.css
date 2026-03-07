@@ -36,8 +36,80 @@
     @apply bg-sky-500 text-white px-6 py-3 rounded-2xl font-semibold 
            hover:bg-sky-600 transition-all active:scale-95 shadow-lg shadow-sky-200;
   }
+
+  /* Share Vui – Challenge viral */
+  .card-glow {
+    @apply relative overflow-hidden rounded-3xl transition-all duration-300;
+    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
+  }
+  .card-glow:hover {
+    box-shadow: 0 0 30px 5px rgba(99, 102, 241, 0.15),
+                0 0 60px 10px rgba(168, 85, 247, 0.08);
+    transform: translateY(-4px);
+  }
+
+  /* Mystery Map – Puzzle pieces */
+  .puzzle-piece {
+    @apply rounded-2xl border-2 border-dashed border-slate-200 
+           flex items-center justify-center transition-all duration-300 cursor-pointer;
+  }
+  .puzzle-piece:hover {
+    @apply border-indigo-400 bg-indigo-50/50 scale-105;
+  }
+  .puzzle-piece.collected {
+    @apply border-solid border-emerald-400 bg-emerald-50;
+  }
+  .puzzle-piece.legendary {
+    @apply border-solid border-amber-400 bg-gradient-to-br from-amber-50 to-yellow-50;
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
+  }
+
+  /* Blind Box */
+  .blind-box {
+    @apply relative rounded-3xl overflow-hidden cursor-pointer;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+  .blind-box::before {
+    content: '?';
+    @apply absolute inset-0 flex items-center justify-center text-6xl font-black text-white/30;
+  }
+
+  /* Viral gradient */
+  .gradient-viral {
+    background: linear-gradient(135deg, #ff6b6b 0%, #feca57 25%, #48dbfb 50%, #ff9ff3 75%, #54a0ff 100%);
+    background-size: 300% 300%;
+    animation: gradient-shift 6s ease infinite;
+  }
 }
 
 .gradient-text {
   @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500;
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes bounce-in {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.05); }
+  70% { transform: scale(0.9); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 5px rgba(99, 102, 241, 0.3); }
+  50% { box-shadow: 0 0 25px rgba(99, 102, 241, 0.6); }
+}
+
+@keyframes float-up {
+  0% { transform: translateY(20px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
 }

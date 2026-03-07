@@ -1,5 +1,5 @@
 import Hero from '@/components/discovery/Hero';
-import { ShieldCheck, Info, Bed, Laptop, Coffee, Palmtree, Building2 } from 'lucide-react';
+import { ShieldCheck, Info, Bed, Laptop, Coffee, Palmtree, Building2, Play, Sparkles, Map, Puzzle, Gift, ArrowRight, Trophy, Video } from 'lucide-react';
 import Link from 'next/link';
 
 const MOCK_LISTINGS = [
@@ -155,6 +155,135 @@ export default async function Home() {
                             </div>
                         </div>
                     ))}
+                </div>
+            </section>
+
+            {/* ===== SHARE VUI CHALLENGE CTA ===== */}
+            <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-12 sm:pb-20">
+                <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 p-8 sm:p-12">
+                    {/* Decorative elements */}
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/3" />
+                    <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/4" />
+                    <div className="absolute top-10 left-1/4 text-6xl opacity-10 rotate-12">🎬</div>
+                    <div className="absolute bottom-8 right-1/4 text-5xl opacity-10 -rotate-12">🏆</div>
+
+                    <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                        <div>
+                            <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-bold text-white mb-4">
+                                <Sparkles className="w-3 h-3" /> HOT CHALLENGE 🔥
+                            </div>
+                            <h2 className="text-3xl sm:text-4xl font-black text-white mb-4 leading-tight">
+                                Share <span className="text-yellow-300">Vui</span> Challenge
+                            </h2>
+                            <p className="text-indigo-100 text-sm sm:text-base mb-6 max-w-md">
+                                Quay video cuộc sống ở ghép · Nhận điểm + phần thưởng · Miễn phí tiền trọ cho top creators!
+                            </p>
+                            <div className="flex flex-wrap gap-3">
+                                <Link href="/share-vui">
+                                    <button className="px-6 py-3 rounded-2xl font-black text-sm bg-white text-indigo-600 hover:bg-indigo-50 transition-all active:scale-95 shadow-lg flex items-center gap-2">
+                                        <Video className="w-4 h-4" />
+                                        Tham gia ngay
+                                    </button>
+                                </Link>
+                                <Link href="/share-vui/leaderboard">
+                                    <button className="px-6 py-3 rounded-2xl font-bold text-sm bg-white/20 text-white hover:bg-white/30 transition-all active:scale-95 flex items-center gap-2">
+                                        <Trophy className="w-4 h-4" />
+                                        Xem BXH
+                                    </button>
+                                </Link>
+                            </div>
+                        </div>
+                        <div className="hidden lg:grid grid-cols-3 gap-3">
+                            {[
+                                { thumb: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=200&h=280&fit=crop', label: '✨ Before/After' },
+                                { thumb: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=200&h=280&fit=crop', label: '🌅 Một ngày share' },
+                                { thumb: 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=200&h=280&fit=crop', label: '📋 Rule nhà mình' },
+                            ].map((item, i) => (
+                                <div key={i} className="relative rounded-2xl overflow-hidden aspect-[3/4] group">
+                                    <img src={item.thumb} alt={item.label} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                                    <div className="absolute bottom-3 left-3 right-3">
+                                        <p className="text-[10px] font-bold text-white">{item.label}</p>
+                                    </div>
+                                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <div className="w-10 h-10 bg-white/80 rounded-full flex items-center justify-center">
+                                            <Play className="w-4 h-4 text-indigo-600 ml-0.5" />
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* ===== MYSTERY MAP TEASER ===== */}
+            <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-12 sm:pb-20">
+                <div className="relative overflow-hidden rounded-[2.5rem] bg-white border border-slate-100 p-8 sm:p-12">
+                    <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-amber-50 to-transparent rounded-full -translate-y-1/2 translate-x-1/3" />
+
+                    <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                        <div>
+                            <div className="inline-flex items-center gap-2 bg-amber-50 px-3 py-1.5 rounded-full text-xs font-bold text-amber-700 mb-4">
+                                <Map className="w-3 h-3" /> GAMIFICATION MỚI 🗺️
+                            </div>
+                            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 mb-4 leading-tight">
+                                Bản Đồ <span className="gradient-text">Bí Mật</span> Smile
+                            </h2>
+                            <p className="text-slate-500 text-sm sm:text-base mb-6 max-w-md">
+                                Tiếp sức hàng xóm → Nhận mảnh ghép → Đổi & hoàn thành bản đồ → Mở Mega Blind Box cho cả tòa nhà! 🎁
+                            </p>
+                            <div className="flex flex-wrap gap-2 mb-6">
+                                {['🥐 Bữa sáng 0đ', '⚡ Ưu tiên đơn', '💧 Miễn phí nước', '🦸 Danh hiệu VIP'].map((reward) => (
+                                    <span key={reward} className="px-3 py-1.5 bg-slate-50 rounded-full text-xs font-bold text-slate-600 border border-slate-100">
+                                        {reward}
+                                    </span>
+                                ))}
+                            </div>
+                            <Link href="/dashboard/mystery-map">
+                                <button className="px-6 py-3 rounded-2xl font-black text-sm bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:shadow-lg transition-all active:scale-95 shadow-md flex items-center gap-2">
+                                    <Puzzle className="w-4 h-4" />
+                                    Khám phá ngay
+                                    <ArrowRight className="w-4 h-4" />
+                                </button>
+                            </Link>
+                        </div>
+                        <div className="hidden lg:block">
+                            <div className="grid grid-cols-4 gap-2 max-w-xs mx-auto">
+                                {[
+                                    { emoji: '🏠', collected: true, rarity: 'common' },
+                                    { emoji: '🌳', collected: true, rarity: 'uncommon' },
+                                    { emoji: '❓', collected: false, rarity: 'rare' },
+                                    { emoji: '🛒', collected: true, rarity: 'common' },
+                                    { emoji: '❓', collected: false, rarity: 'common' },
+                                    { emoji: '📚', collected: true, rarity: 'uncommon' },
+                                    { emoji: '⭐', collected: false, rarity: 'legendary' },
+                                    { emoji: '🏛️', collected: true, rarity: 'rare' },
+                                    { emoji: '❓', collected: false, rarity: 'uncommon' },
+                                    { emoji: '🎵', collected: true, rarity: 'common' },
+                                    { emoji: '❓', collected: false, rarity: 'common' },
+                                    { emoji: '🌉', collected: true, rarity: 'rare' },
+                                ].map((piece, i) => (
+                                    <div
+                                        key={i}
+                                        className={`aspect-square rounded-xl flex items-center justify-center text-2xl border-2 transition-all ${
+                                            piece.collected
+                                                ? piece.rarity === 'legendary'
+                                                    ? 'border-amber-300 bg-amber-50 shadow-sm shadow-amber-200'
+                                                    : piece.rarity === 'rare'
+                                                    ? 'border-indigo-300 bg-indigo-50'
+                                                    : piece.rarity === 'uncommon'
+                                                    ? 'border-emerald-300 bg-emerald-50'
+                                                    : 'border-slate-200 bg-slate-50'
+                                                : 'border-dashed border-slate-200 bg-slate-50/50 opacity-40'
+                                        }`}
+                                    >
+                                        {piece.emoji}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
         </div>
