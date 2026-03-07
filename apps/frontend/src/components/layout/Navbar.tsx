@@ -24,6 +24,7 @@ export default function Navbar() {
                 <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
                     <Link href="/" className="hover:text-indigo-600 transition-colors">Tìm phòng</Link>
                     <Link href="/share-vui" className="hover:text-indigo-600 transition-colors flex items-center gap-1">🎬 Share Vui</Link>
+                    <Link href="/smile-home" className="hover:text-indigo-600 transition-colors flex items-center gap-1">🏠 Smile Home</Link>
                     <Link href="/dashboard/my-room" className="hover:text-indigo-600 transition-colors">Phòng của tôi</Link>
                     <Link href="/dashboard/bills" className="hover:text-indigo-600 transition-colors">Hóa đơn</Link>
                     <Link href="/partners" className="hover:text-indigo-600 transition-colors">Đối tác</Link>
@@ -59,6 +60,9 @@ export default function Navbar() {
                         </Link>
                         <Link href="/share-vui" onClick={() => setIsOpen(false)} className="block px-4 py-3 rounded-xl text-slate-700 font-medium hover:bg-indigo-50 hover:text-indigo-600 transition-all">
                             🎬 Share Vui Challenge
+                        </Link>
+                        <Link href="/smile-home" onClick={() => setIsOpen(false)} className="block px-4 py-3 rounded-xl text-slate-700 font-medium hover:bg-indigo-50 hover:text-indigo-600 transition-all">
+                            🏠 Smile Home
                         </Link>
                         <Link href="/dashboard/my-room" onClick={() => setIsOpen(false)} className="block px-4 py-3 rounded-xl text-slate-700 font-medium hover:bg-indigo-50 hover:text-indigo-600 transition-all">
                             🛏️ Phòng của tôi
