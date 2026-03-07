@@ -4,6 +4,29 @@ Ghi chú version cho mỗi lần deploy. Format: `vX.Y.Z` (Major.Feature.Patch)
 
 ---
 
+## v1.6.0 — Thợ Uy Tín Marketplace (2026-03-07)
+**Deploy:** `(pending push)` → Vercel auto-deploy từ `main`
+**Machine:** Antigravity AI
+**Files changed:** 2 files, +500 lines
+
+### Tính năng mới:
+- 🔧 **`/tho-uy-tin` – Thợ Uy Tín** (Trusted Repair Worker Marketplace)
+  - 5 thợ uy tín: điện, nước, điều hoà, khoá, đồ gia dụng
+  - Bảng giá chi tiết + bảo hành rõ ràng (3-6 tháng)
+  - Review thật từ cư dân (dựa trên insight thực tế: thợ báo giá láo)
+  - 8 danh mục: ⚡ Điện, 🚿 Nước, ❄️ Điều hoà, 🔑 Khoá, 🔌 Gia dụng, 🎨 Sơn, 🧹 Vệ sinh
+  - Form đăng yêu cầu sửa chữa (loại sự cố + mức độ khẩn cấp + địa chỉ)
+  - Verified badges, response time, distance
+  - Search, filter by category, sort by rating/distance/reviews
+  - Web Share API: chia sẻ thợ uy tín cho hàng xóm
+- 🧭 Navbar: thêm link "🔧 Thợ Uy Tín" (desktop + mobile)
+
+### Insight thực tế:
+> Từ cuộc trò chuyện thực: Thợ A sửa bảng mạch 500k bảo hành 6 tháng vs Thợ B đòi 1 triệu bảo hành 1 tháng.
+> → Smile giải quyết bằng: giá công khai, review thật, bảo hành minh bạch.
+
+---
+
 ## v1.5.0 — Neighborhood Explorer (2026-03-07)
 **Deploy:** `acfa891` → Vercel auto-deploy từ `main`
 **Machine:** Antigravity AI
