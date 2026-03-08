@@ -1,4 +1,4 @@
-import { Home, FileText, Wrench, CreditCard, User, ShoppingBag, ShieldCheck, Megaphone, BookOpen, Flame, LogOut, Video, Map, Users } from 'lucide-react';
+import { Home, FileText, Wrench, CreditCard, User, ShoppingBag, ShieldCheck, Megaphone, BookOpen, Flame, LogOut, Video, Map, Users, Radar } from 'lucide-react';
 import Link from 'next/link';
 
 export default function DashboardLayout({
@@ -21,6 +21,7 @@ export default function DashboardLayout({
         { icon: Users, label: '🏠 Smile Home', href: '/smile-home' },
         { icon: Megaphone, label: '🤖 Bot Đăng Bài', href: '/dashboard/auto-post' },
         { icon: Users, label: '📋 Quản lý Khách', href: '/dashboard/leads' },
+        { icon: Radar, label: '🎯 Tìm Khách MXH', href: '/dashboard/lead-hunter' },
         { icon: LogOut, label: 'Trả phòng', href: '/dashboard/checkout' },
         { icon: User, label: 'Hồ sơ', href: '/dashboard/profile' },
     ];

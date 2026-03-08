@@ -4,6 +4,25 @@ Ghi chú version cho mỗi lần deploy. Format: `vX.Y.Z` (Major.Feature.Patch)
 
 ---
 
+## v2.0.0 — Social Lead Hunter (2026-03-08)
+**Deploy:** `(pending Vercel reconnect)` → Vercel auto-deploy từ `main`
+**Machine:** Antigravity AI
+**Files changed:** 2 files, +410 lines
+
+### 🎯 Tính năng mới:
+- **`/dashboard/lead-hunter` – Tìm Khách Tự Động trên MXH**
+  - Tab Leads: 7 leads phát hiện từ FB/Zalo groups, match score (85-96%), keyword extraction
+  - Tab Nhóm: 6 nhóm theo dõi (520k→8.5k members), trạng thái quét real-time
+  - Tab Từ khoá: 8 keywords tracking ("tìm phòng trọ", "cần phòng", "ở ghép"...)
+  - Tab Cài đặt: tần suất quét, match threshold, khu vực ưu tiên, thông báo
+  - Reply drawer: 3 gợi ý reply tự động cho mỗi lead (personalized theo tên, khu vực, budget)
+  - Copy-to-clipboard → paste vào FB/Zalo groups
+  - Status tracking: Mới → Đã reply → Đã liên hệ
+- 🧭 Dashboard sidebar: thêm "🎯 Tìm Khách MXH"
+- 📦 Import fix: `Radar` icon layout
+
+---
+
 ## v1.9.0 — Customer Acquisition Tools (2026-03-08)
 **Deploy:** `(pending Vercel reconnect)` → Vercel auto-deploy từ `main`
 **Machine:** Antigravity AI
