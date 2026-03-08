@@ -4,6 +4,27 @@ Ghi chú version cho mỗi lần deploy. Format: `vX.Y.Z` (Major.Feature.Patch)
 
 ---
 
+## v1.8.0 — Auto Post Bot System (2026-03-08)
+**Deploy:** `(pending Vercel reconnect)` → Vercel auto-deploy từ `main`
+**Machine:** Antigravity AI
+**Files changed:** 3 files, +440 lines
+
+### Tính năng mới:
+- 🤖 **`/dashboard/auto-post` – Bot Đăng Bài Tự Động**
+  - Tab Bot: Quản lý 3 bot (Facebook, Zalo, TikTok) — bật/tắt, lịch đăng, nhóm target
+  - Tab Tạo bài: 5 template (cho thuê, hot sale, ở ghép, Zalo, TikTok) × 3 phòng → preview + copy
+  - Tab Lịch đăng: Queue bài đã hẹn giờ, trạng thái pending/scheduled
+  - Tab Thống kê: 4 KPI (bài đăng, tiếp cận, leads, conversion) + chart 7 ngày + top posts
+  - Template variables: {{roomType}}, {{price}}, {{address}}, {{amenities}}, {{phone}}, {{link}}
+  - Copy bài → đăng lên FB/Zalo/TikTok groups
+- 🧭 Dashboard sidebar: thêm "🤖 Bot Đăng Bài"
+
+### Ý tưởng đang queue (chưa build):
+- Night Owl Nest (private night pods, 800k/month, focus quests)
+- Smile Campus Hub (school-certified badge, census quest)
+
+---
+
 ## v1.7.0 — Smile Future Campaign (2026-03-07)
 **Deploy:** `(pending)` → Vercel auto-deploy từ `main`
 **Machine:** Antigravity AI

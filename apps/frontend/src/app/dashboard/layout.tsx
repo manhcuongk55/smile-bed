@@ -19,6 +19,7 @@ export default function DashboardLayout({
         { icon: Video, label: '🎬 Share Vui', href: '/share-vui' },
         { icon: Map, label: '🗺️ Mystery Map', href: '/dashboard/mystery-map' },
         { icon: Users, label: '🏠 Smile Home', href: '/smile-home' },
+        { icon: Megaphone, label: '🤖 Bot Đăng Bài', href: '/dashboard/auto-post' },
         { icon: LogOut, label: 'Trả phòng', href: '/dashboard/checkout' },
         { icon: User, label: 'Hồ sơ', href: '/dashboard/profile' },
     ];
