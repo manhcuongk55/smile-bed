@@ -4,6 +4,29 @@ Ghi chú version cho mỗi lần deploy. Format: `vX.Y.Z` (Major.Feature.Patch)
 
 ---
 
+## v1.9.0 — Customer Acquisition Tools (2026-03-08)
+**Deploy:** `(pending Vercel reconnect)` → Vercel auto-deploy từ `main`
+**Machine:** Antigravity AI
+**Files changed:** 4 files, +650 lines
+
+### Tính năng mới:
+- 🔍 **`/tim-tro/[khu-vuc]` – SEO Landing Pages**
+  - 4 khu vực: Cầu Giấy, Bình Thạnh, Thủ Đức, Đống Đa
+  - Mỗi trang: danh sách phòng, filter giá, amenities, breadcrumbs SEO
+  - Lead capture form inline (Tư vấn miễn phí → SĐT + Zalo + yêu cầu)
+  - Cross-links giữa các khu vực (internal linking SEO)
+  - URL structure: `/tim-tro/cau-giay`, `/tim-tro/binh-thanh`...
+  - Google target: "phòng trọ cầu giấy", "nhà trọ bình thạnh"...
+- 📋 **`/dashboard/leads` – Lead CRM Dashboard**
+  - Pipeline: Mới → Đã liên hệ → Xem phòng → Ký HĐ → Mất
+  - 7 leads mẫu với source tracking (FB, Zalo, TikTok, Website, Giới thiệu)
+  - Detail drawer: gọi/Zalo, ghi chú, assign sale, cập nhật trạng thái
+  - Add lead modal, search/filter theo nguồn + trạng thái
+  - KPI: tổng leads, conversion rate, chờ liên hệ
+- 🧭 Dashboard sidebar: thêm "📋 Quản lý Khách"
+
+---
+
 ## v1.8.0 — Auto Post Bot System (2026-03-08)
 **Deploy:** `(pending Vercel reconnect)` → Vercel auto-deploy từ `main`
 **Machine:** Antigravity AI
